@@ -1,4 +1,4 @@
-cpod - The C\* Ipod Client
+cpod - C\* iPod Client
 ==========================
 usage:
 
