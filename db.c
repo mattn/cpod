@@ -3,7 +3,7 @@
 #include <stdbool.h>    /* bool type */
 #include <string.h>     /* strlen() */
 /*#include <limits.h>     * LINE_MAX */
-#include <glib.h>       /* g_list_append(), g_g_strdup() */
+#include <glib.h>       /* g_list_append(), g_strdup() */
 #include <gpod/itdb.h>  /* Itdb_* types and functions */
 #include <taglib/tag_c.h> /* wooo taglib wooo */
 
@@ -65,12 +65,12 @@ Itdb_Track *track_parse(char *path) {
     tag = taglib_file_tag(file);
     audio = taglib_file_audioproperties(file);
 
-    /* g_g_strdup() string fields so that taglib_tag_free_strings() works */
-    track->title = strdup(taglib_tag_title(tag));
-    track->album = strdup(taglib_tag_album(tag));
-    track->artist = strdup(taglib_tag_artist(tag));
-    track->genre = strdup(taglib_tag_genre(tag));
-    track->comment = strdup(taglib_tag_comment(tag));
+    /* g_strdup() string fields so that taglib_tag_free_strings() works */
+    track->title = g_strdup(taglib_tag_title(tag));
+    track->album = g_strdup(taglib_tag_album(tag));
+    track->artist = g_strdup(taglib_tag_artist(tag));
+    track->genre = g_strdup(taglib_tag_genre(tag));
+    track->comment = g_strdup(taglib_tag_comment(tag));
     track->track_nr = taglib_tag_track(tag);
     track->year = taglib_tag_year(tag);
     /* audioproperties_length is in seconds and track->tracklen is in ms */
