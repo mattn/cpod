@@ -53,8 +53,11 @@ Itdb_Track *track_parse(char *path) {
     fclose(track_file);
 
     /* we are storing our filename in userdata */
-    track->userdata = path;
-    track->transferred = false;
+    track->userdata = g_strdup(path);
+    track->transferred = FALSE;
+
+    track->userdata_duplicate = g_strdup;
+    track->userdata_destroy = g_free;
 
     file = taglib_file_new(path);
     if (file == NULL) {
@@ -82,6 +85,18 @@ Itdb_Track *track_parse(char *path) {
     taglib_file_free(file);
 
     return track;
+}
+
+bool transfer_db(Itdb_iTunesDB *db) {
+    GList *e = NULL;
+    Itdb_Track *track = NULL;
+
+    for (e = db->tracks; e; e = e->next) {
+        GError *err = NULL;
+        track = e->data;
+        itdb_cp_track_to_ipod(track, (char *)track->userdata, &err);
+    }
+    return true;
 }
 
 /* check to see if a given path is an iPod mountpoint */

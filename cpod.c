@@ -1,5 +1,6 @@
 #include <stdio.h> /* sprintf, vfprintf, printf */
 #include <stdarg.h> /* va_list */
+#include <stdbool.h> /* booleans */
 #include <gpod/itdb.h> /* Itdb_* structs */
 
 #include "cpod.h"
@@ -15,19 +16,27 @@ void cpod_error(char *errformat, ...) {
 
 int main(int argc, char *argv[]) {
     Itdb_iTunesDB *db = NULL;
-    Itdb_Track *track = NULL;
-    GList *e = NULL;
 
     if (argv[1] == NULL) {
         cpod_error("too few arguments");
         return 1;
     }
+
+    puts("loading database from .pl file...");
     db = itdb_from_pl(argv[1]);
-    
-    for (e = db->tracks; e; e = e->next) {
-        track = (Itdb_Track *)(e->data);
-        printf("%s by %s\n", track->title, track->artist);
+    puts("database loaded.");
+
+    if (is_ipod_mountpoint(argv[2])) {
+        itdb_set_mountpoint(db, argv[2]);
+    } else {
+        cpod_error("there is no iPod at %s", argv[2]);
+        return 1;
     }
+
+    puts("transferring dat db");
+    transfer_db(db);
+    puts("done.");
+
     itdb_free(db);
     return 0;
 }
