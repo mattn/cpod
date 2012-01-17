@@ -5,6 +5,7 @@
 
 #include "cpod.h"
 #include "db.h"
+#include "transfer.h"
 
 void cpod_error(char *errformat, ...) {
     va_list args;
@@ -16,26 +17,27 @@ void cpod_error(char *errformat, ...) {
 
 int main(int argc, char *argv[]) {
     Itdb_iTunesDB *db = NULL;
+    GError *err = NULL;
+    GList *element = NULL;
 
     if (argv[1] == NULL) {
         cpod_error("too few arguments");
         return 1;
     }
 
-    puts("loading database from .pl file...");
-    db = itdb_from_pl(argv[1]);
-    puts("database loaded.");
+    db = itdb_parse(argv[1], &err);
 
-    if (is_ipod_mountpoint(argv[2])) {
-        itdb_set_mountpoint(db, argv[2]);
-    } else {
-        cpod_error("there is no iPod at %s", argv[2]);
+    if (err) {
+        cpod_error(err->message);
         return 1;
     }
 
-    puts("transferring dat db");
-    transfer_db(db);
-    puts("done.");
+    for (element = db->tracks; element; element = element->next) {
+        Itdb_Track *track = element->data;
+        char *filename = itdb_filename_on_ipod(track);
+        puts(filename);
+        g_free(filename);
+    }
 
     itdb_free(db);
     return 0;

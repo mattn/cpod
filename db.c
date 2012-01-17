@@ -9,17 +9,7 @@
 
 #include "db.h"
 #include "cpod.h"
-
-/* itdb_parse(), but with error handling. This is for iPods ONLY. */
-Itdb_iTunesDB *itdb_get(char *mp) {
-    Itdb_iTunesDB *ipod = NULL;
-    GError *err = NULL;
-    ipod = itdb_parse(mp, &err);
-    if(err)
-        cpod_error(err->message);
-    /* ipod is NULL if we got an error. */
-    return ipod;
-}
+#include "util.h"
 
 /* get an Itdb_iTunesDB from a .pl file (a flat list of filenames) */
 Itdb_iTunesDB *itdb_from_pl(char *path) {
@@ -85,18 +75,6 @@ Itdb_Track *track_parse(char *path) {
     taglib_file_free(file);
 
     return track;
-}
-
-bool transfer_db(Itdb_iTunesDB *db) {
-    GList *e = NULL;
-    Itdb_Track *track = NULL;
-
-    for (e = db->tracks; e; e = e->next) {
-        GError *err = NULL;
-        track = e->data;
-        itdb_cp_track_to_ipod(track, (char *)track->userdata, &err);
-    }
-    return true;
 }
 
 /* check to see if a given path is an iPod mountpoint */
