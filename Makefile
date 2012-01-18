@@ -2,7 +2,7 @@
 CFLAGS = `pkg-config --cflags libgpod-1.0 taglib_c`
 LIBS = `pkg-config --libs libgpod-1.0 taglib_c`
 
-CFLAGS  += -g -std=c99 -pedantic -Wall -Wstrict-prototypes ${INCS}
+CFLAGS  += -g -std=c99 -Wall -Wstrict-prototypes ${INCS}
 LDFLAGS += ${LIBS}
 CC = cc
 
