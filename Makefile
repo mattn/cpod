@@ -4,13 +4,13 @@ LIBS = `pkg-config --libs libgpod-1.0 taglib_c`
 
 CFLAGS  += -g -std=c99 -Wall -Wstrict-prototypes ${INCS}
 LDFLAGS += ${LIBS}
-CC = cc
+CC = clang
 
 all: cpod
 
 cpod: cpod.o db.o transfer.o util.o
-	@echo "CC -o cpod cpod.o db.o"
-	@${CC} ${LDFLAGS} -o cpod cpod.o db.o
+	@echo "CC -o cpod"
+	@${CC} ${LDFLAGS} -o cpod *.o
 
 cpod.o: cpod.c cpod.h db.h
 	@echo "CC -c cpod.c"
