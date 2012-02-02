@@ -1,12 +1,7 @@
 cpod - C\* iPod Client
 ==========================
-usage:
+The only command currently implemented is `cpod-cp`.
 
-    # sync ipod with music directory
-    $ cpod ./music /media/ipod
+Usage:
 
-    # sync music directory w/ the ipod
-    $ cpod /media/ipod ./music
-
-    # add a single file to ipod
-    $ cpod layla.mp3 /media/ipod
+    $ cpod-cp music.mp3 /media/ipod
