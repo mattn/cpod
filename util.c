@@ -1,8 +1,21 @@
+#include <stdio.h>
+#include <stdarg.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <errno.h>
+#include <string.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 
 #include "util.h"
+
+void cpod_error(const char *errformat, ...) {
+    va_list args;
+    char format[256]; /* plenty of space */
+    sprintf(format, "cpod: %s\n", errformat);
+    vfprintf(stderr, format, args);
+    va_end(args);
+}
 
 int cp(const char *to, const char *from)
 {
@@ -61,4 +74,32 @@ int cp(const char *to, const char *from)
 
     errno = saved_errno;
     return -1;
+}
+
+int mkdirp(char *directory, mode_t mask) {
+    int result = mkdir(directory, mask);
+    if (result == 0) return 0;
+    if (errno == EEXIST) {
+        cpod_error("%s: %s", directory, strerror(EEXIST));
+        return -1;
+    } else if (errno == ENOENT) {
+        char* last_slash = strrchr(directory, '/');
+        if (last_slash == NULL) {
+            cpod_error("%s: %s", directory, strerror(errno));
+            return -1;
+        }
+        *last_slash = 0;
+        if (!mkdirp(directory, mask)) return 1;
+        *last_slash = '/';
+        result = mkdir(directory, mask);
+        if (result == 0) return 0;
+        if (errno == EEXIST) {
+           return -1;
+        }
+        cpod_error("%s: %s", directory, strerror(errno));
+        return -1;
+    } else {
+        cpod_error("%s: %s", directory, strerror(errno));
+        return -1;
+    }
 }

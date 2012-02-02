@@ -1,14 +1,11 @@
-/*#include <stdlib.h>*/
-#include <stdio.h>      /* fgets() */
-#include <stdbool.h>    /* bool type */
-#include <string.h>     /* strlen() */
-/*#include <limits.h>     * LINE_MAX */
-#include <glib.h>       /* g_list_append(), g_strdup() */
-#include <gpod/itdb.h>  /* Itdb_* types and functions */
-#include <taglib/tag_c.h> /* wooo taglib wooo */
+#include <stdio.h>
+#include <stdbool.h>
+#include <string.h>
+#include <glib.h>
+#include <gpod/itdb.h>
+#include <taglib/tag_c.h>
 
 #include "db.h"
-#include "cpod.h"
 #include "util.h"
 
 /* get an Itdb_iTunesDB from a .pl file (a flat list of filenames) */
@@ -46,7 +43,7 @@ Itdb_Track *track_parse(char *path) {
     track->userdata = g_strdup(path);
     track->transferred = FALSE;
 
-    track->userdata_duplicate = g_strdup;
+    track->userdata_duplicate = (gpointer (*)(gpointer))g_strdup;
     track->userdata_destroy = g_free;
 
     file = taglib_file_new(path);

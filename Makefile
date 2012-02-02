@@ -6,15 +6,15 @@ CFLAGS  += -g -std=c99 -Wall -Wstrict-prototypes ${INCS}
 LDFLAGS += ${LIBS}
 CC = clang
 
-all: cpod
+all: cpod-cp
 
-cpod: cpod.o db.o transfer.o util.o
-	@echo "CC -o cpod"
-	@${CC} ${LDFLAGS} -o cpod *.o
+cpod-cp: cpod-cp.o db.o util.o
+	@echo "CC -o cpod-cp"
+	@${CC} ${LDFLAGS} -o cpod-cp *.o
 
-cpod.o: cpod.c cpod.h db.h
-	@echo "CC -c cpod.c"
-	@${CC} ${CFLAGS} -c cpod.c
+cpod-cp.o: cpod-cp.c db.h
+	@echo "CC -c cpod-cp.c"
+	@${CC} ${CFLAGS} -c cpod-cp.c
 
 db.o: db.c db.h
 	@echo "CC -c db.c"
@@ -24,11 +24,7 @@ util.o: util.c util.h
 	@echo "CC -c util.c"
 	@${CC} ${CFLAGS} -c util.c
 
-transfer.o: transfer.c transfer.h
-	@echo "CC -c util.c"
-	@${CC} ${CFLAGS} -c transfer.c
-
 
 clean:
 	@echo "cleaning"
-	@rm *.o cpod
+	@rm *.o cpod-cp
