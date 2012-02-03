@@ -26,10 +26,13 @@ int main(int argc, char *argv[]) {
     Itdb_Track *track = track_parse(local_path, db);
     track->itdb = db;
     itdb_cp_track_to_ipod(track, track->userdata, &err);
+
+    itdb_write(db, &err);
+    if (err) goto error_exit;
     itdb_free(db);
     db = NULL;
-    if (err) goto error_exit;
     return 0;
+
   error_exit:
     cpod_error(err->message);
     return 1;
