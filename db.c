@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
-#include <glib.h>
 #include <gpod/itdb.h>
 #include <taglib/tag_c.h>
 
