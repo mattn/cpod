@@ -20,15 +20,14 @@ Itdb_iTunesDB *itdb_from_pl(char *path) {
     while (fgets(track_path, 2048, pl) != NULL) {
         /* chop newline */
         track_path[strlen(track_path)-1] = '\0';
-        track = track_parse(track_path);
-        track->itdb = result;
-        result->tracks = g_list_append(result->tracks, track);
+        track = track_parse(track_path, result);
+        itdb_track_add(result, track, -1);
     }
     return result;
 }
 
 /* get an Itdb_Track from the given file */
-Itdb_Track *track_parse(char *path) {
+Itdb_Track *track_parse(char *path, Itdb_iTunesDB *db) {
     TagLib_File *file = NULL;
     TagLib_Tag *tag = NULL;
     const TagLib_AudioProperties *audio = NULL;
@@ -41,7 +40,9 @@ Itdb_Track *track_parse(char *path) {
 
     /* we are storing our filename in userdata */
     track->userdata = g_strdup(path);
+
     track->transferred = FALSE;
+    itdb_track_add(db, track, -1);
 
     track->userdata_duplicate = (gpointer (*)(gpointer))g_strdup;
     track->userdata_destroy = g_free;

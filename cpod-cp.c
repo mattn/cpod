@@ -23,7 +23,7 @@ int main(int argc, char *argv[]) {
     db = itdb_parse(mp, &err);
     if (err) goto error_exit;
 
-    Itdb_Track *track = track_parse(local_path);
+    Itdb_Track *track = track_parse(local_path, db);
     track->itdb = db;
     itdb_cp_track_to_ipod(track, track->userdata, &err);
     itdb_free(db);
