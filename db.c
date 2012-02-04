@@ -39,12 +39,11 @@ Itdb_Track *track_parse(char *path, Itdb_iTunesDB *db) {
 
     /* we are storing our filename in userdata */
     track->userdata = g_strdup(path);
+    track->userdata_duplicate = (gpointer (*)(gpointer))g_strdup;
+    track->userdata_destroy = g_free;
 
     track->transferred = FALSE;
     itdb_track_add(db, track, -1);
-
-    track->userdata_duplicate = (gpointer (*)(gpointer))g_strdup;
-    track->userdata_destroy = g_free;
 
     file = taglib_file_new(path);
     if (file == NULL) {
