@@ -1,4 +1,5 @@
-cpod*
+cpod-cp
+cpod-ls
 *.o
 .*.sw?
 .clang_complete
