@@ -77,7 +77,12 @@ int cp(const char *to, const char *from)
 }
 
 int mkdirp(char *directory, mode_t mask) {
+#ifdef _WIN32
+    int result = mkdir(directory);
+	if (result == 0) chmod(directory, mask);
+#else
     int result = mkdir(directory, mask);
+#endif
     if (result == 0) return 0;
     if (errno == EEXIST) {
         cpod_error("%s: %s", directory, strerror(EEXIST));
@@ -91,7 +96,12 @@ int mkdirp(char *directory, mode_t mask) {
         *last_slash = 0;
         if (!mkdirp(directory, mask)) return 1;
         *last_slash = '/';
+#ifdef _WIN32
+        result = mkdir(directory);
+        if (result == 0) chmod(directory, mask);
+#else
         result = mkdir(directory, mask);
+#endif
         if (result == 0) return 0;
         if (errno == EEXIST) {
            return -1;
